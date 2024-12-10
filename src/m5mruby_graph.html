@@ -26,6 +26,7 @@ Copyright 2024 Hack academia.
     <div class="contents margin">
         <button id="startNotifications" class="button">Start Notify</button>
         <button id="stopNotifications" class="button">Stop Notify</button>
+        <button id="slack" class="button">Post message</button>
 
         <hr>
         <canvas id="chart" width="800" height="320"></canvas>
@@ -244,6 +245,29 @@ document.getElementById('startNotifications').addEventListener('click', function
 document.getElementById('stopNotifications').addEventListener('click', function() {
   ble.stopNotify('UUID1');
 });
+
+function postToSlack(msg) {
+  let xhr = new XMLHttpRequest();
+
+  // リクエストの設定
+  xhr.open('POST', 'https://slack.com/api/chat.postMessage', true);
+  xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded;charset=UTF-8');
+
+  // リクエストの送信
+  const TOKEN = 'ここにトークンいれる';
+  xhr.send('token=' + TOKEN + '&channel=C07UTLBS8NM&text=*' + msg + '*');
+
+  // レスポンスの処理
+  xhr.onload = function () {
+    if (xhr.status == 200) {
+      console.log('Success:', xhr.responseText);
+    } else {
+      console.error('Error:', xhr.statusText);
+    }
+  };
+}
+
+document.getElementById('slack').addEventListener('click', postToSlack('Test message!'));
 
 function SetBackColor(id, col) {
   document.getElementById(id).style.backgroundColor = col;
